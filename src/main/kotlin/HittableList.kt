@@ -1,9 +1,5 @@
 class HittableList : Hittable {
-    val objects = mutableListOf<Hittable>()
-
-    fun clear() {
-        objects.clear()
-    }
+    private val objects = mutableListOf<Hittable>()
 
     fun add(thing: Hittable) {
         objects.add(thing)

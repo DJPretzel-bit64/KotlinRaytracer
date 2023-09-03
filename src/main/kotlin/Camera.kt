@@ -2,9 +2,7 @@ import Vec3.Companion.times
 import Vec3.Companion.unitVector
 import java.awt.image.BufferedImage
 import java.io.File
-import java.util.stream.IntStream
 import javax.imageio.ImageIO
-import kotlin.coroutines.coroutineContext
 import kotlin.math.max
 
 class Camera {
@@ -30,7 +28,7 @@ class Camera {
     fun render(world: Hittable) {
         initialize()
 
-        print("P3\n$imageWidth $imageHeight\n255\n")
+//        print("P3\n$imageWidth $imageHeight\n255\n")
 
         for(j in 0..<imageHeight) {
             for(i in 0..<imageWidth) {
@@ -39,7 +37,7 @@ class Camera {
                     val r = getRay(i, j)
                     pixelColor += rayColor(r, maxDepth, world)
                 }
-                Color.writeColor(pixelColor, samplesPerPixel)
+//                Color.writeColor(pixelColor, samplesPerPixel)
                 image?.setRGB(i, j, Color.intRGB((pixelColor.toVec3() / samplesPerPixel.toDouble()).toColor()))
             }
         }

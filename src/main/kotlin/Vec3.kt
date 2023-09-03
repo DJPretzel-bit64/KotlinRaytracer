@@ -1,9 +1,9 @@
 import kotlin.math.abs
+import kotlin.math.min
 import kotlin.math.sqrt
 
 class Vec3(var x: Double, var y: Double, var z: Double) {
     constructor() : this(0.0, 0.0, 0.0)
-    constructor(x: Int, y: Int, z: Int) : this(x.toDouble(), y.toDouble(), z.toDouble())
     operator fun unaryMinus() = Vec3(-x, -y, -z)
     operator fun get(i: Int) = when(i) {
         1 -> x
@@ -64,6 +64,12 @@ class Vec3(var x: Double, var y: Double, var z: Double) {
             else -onUnitSphere
         }
         fun reflect(v: Vec3, n: Vec3) = v - 2 * dot(v, n) * n
+        fun refract(uv: Vec3, n: Vec3, etaiOverEtat: Double): Vec3 {
+            val cosTheta = min(dot(-uv, n), 1.0)
+            val rOutPerpendicular = etaiOverEtat * (uv + cosTheta * n)
+            val rOutParallel = -sqrt(abs(1.0 - rOutPerpendicular.lengthSquared())) * n
+            return rOutPerpendicular + rOutParallel
+        }
         operator fun Color.times(c: Color) = (this.toVec3() * c.toVec3()).toColor()
         operator fun Double.times(v: Vec3) = v * this
         operator fun Double.times(c: Color) = (c.toVec3() * this).toColor()
