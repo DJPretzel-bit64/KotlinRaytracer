@@ -2,10 +2,14 @@ import kotlin.math.sqrt
 
 class Color(var r: Double, var g: Double, var b: Double) {
     constructor(r: Int, g: Int, b: Int) : this(r.toDouble(), g.toDouble(), b.toDouble())
+    constructor() : this(0.0, 0.0, 0.0)
     operator fun unaryMinus() = Color(-r, -g, -b)
     operator fun plus(c: Color) = Color(r + c.r, g + c.g, b + c.b)
     operator fun minus(c: Color) = this + -c
     fun toVec3() = Vec3(r, g, b)
+    override fun toString(): String {
+        return "$r, $g, $b"
+    }
     companion object {
         fun linearToGamma(linearComponent: Double) = sqrt(linearComponent)
 

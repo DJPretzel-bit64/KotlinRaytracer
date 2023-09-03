@@ -19,6 +19,10 @@ class HittableList : Hittable {
                 hitAnything = true
                 closestSoFar = tempRec.t
                 rec.normal = tempRec.normal
+                rec.frontFace = tempRec.frontFace
+                rec.t = tempRec.t
+                rec.p = tempRec.p
+                rec.mat = tempRec.mat
             }
         }
 

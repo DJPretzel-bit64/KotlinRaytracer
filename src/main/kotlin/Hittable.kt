@@ -3,6 +3,7 @@ import Vec3.Companion.dot
 class HitRecord {
     var p = Vec3()
     var normal = Vec3()
+    var mat: Material = Lambertian(Color(1, 1, 1))
     var t = 0.0
     var frontFace: Boolean = false
 

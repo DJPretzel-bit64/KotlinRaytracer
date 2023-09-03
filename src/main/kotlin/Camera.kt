@@ -1,11 +1,10 @@
-import Vec3.Companion.randomInUnitSphere
-import Vec3.Companion.randomOnHemisphere
-import Vec3.Companion.randomUnitVector
 import Vec3.Companion.times
 import Vec3.Companion.unitVector
 import java.awt.image.BufferedImage
 import java.io.File
+import java.util.stream.IntStream
 import javax.imageio.ImageIO
+import kotlin.coroutines.coroutineContext
 import kotlin.math.max
 
 class Camera {
@@ -101,8 +100,11 @@ class Camera {
             return Color(0, 0, 0)
 
         if(world.hit(r, Interval(0.001, Double.POSITIVE_INFINITY), rec)) {
-            val direction = rec.normal + randomUnitVector()
-            return 0.5 * rayColor(Ray(rec.p, direction), depth - 1, world)
+            val scattered = mutableListOf(Ray())
+            val attenuation = mutableListOf(Color())
+            if(rec.mat.scatter(r, rec, attenuation, scattered))
+                return attenuation[0] * rayColor(scattered[0], depth-1, world)
+            return Color()
         }
 
         val unitDirection = unitVector(r.direction)

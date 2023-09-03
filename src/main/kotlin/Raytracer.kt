@@ -1,7 +1,15 @@
 fun main() {
     val world = HittableList()
-    world.add(Sphere(Vec3(0.0, -100.5, -1.0), 100.0))
-    world.add(Sphere(Vec3(0, 0, -1), 0.5))
+
+    val materialGround = Lambertian(Color(0.8, 0.8, 0.0))
+    val materialCenter = Lambertian(Color(0.7, 0.3, 0.3))
+    val materialLeft   = Metal(Color(0.8, 0.8, 0.8), 0.3)
+    val materialRight  = Metal(Color(0.8, 0.6, 0.2), 1.0)
+
+    world.add(Sphere(Vec3( 0.0, -100.5, -1.0), 100.0, materialGround))
+    world.add(Sphere(Vec3( 0.0,    0.0, -1.0),   0.5, materialCenter))
+    world.add(Sphere(Vec3(-1.0,    0.0, -1.0),   0.5, materialLeft))
+    world.add(Sphere(Vec3( 1.0,    0.0, -1.0),   0.5, materialRight))
 
     val cam = Camera()
 

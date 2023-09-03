@@ -1,7 +1,7 @@
 import Vec3.Companion.dot
 import kotlin.math.sqrt
 
-class Sphere(private val center: Vec3, private val radius: Double) : Hittable {
+class Sphere(private val center: Vec3, private val radius: Double, private val mat: Material) : Hittable {
     override fun hit(r: Ray, rayT: Interval, rec: HitRecord): Boolean {
         val oc = r.origin - center
         val a = r.direction.lengthSquared()
@@ -24,6 +24,7 @@ class Sphere(private val center: Vec3, private val radius: Double) : Hittable {
         rec.p = r.at(rec.t)
         val outwardNormal = (rec.p - center) / radius
         rec.setFaceNormal(r, outwardNormal)
+        rec.mat = mat
 
         return true
     }

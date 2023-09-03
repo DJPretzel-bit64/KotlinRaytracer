@@ -1,3 +1,4 @@
+import kotlin.math.abs
 import kotlin.math.sqrt
 
 class Vec3(var x: Double, var y: Double, var z: Double) {
@@ -32,6 +33,11 @@ class Vec3(var x: Double, var y: Double, var z: Double) {
     operator fun div(t: Double) = this * (1/t)
     fun length() = sqrt(lengthSquared())
     fun lengthSquared() = x*x + y*y + z*z
+    fun nearZero(): Boolean {
+        // Return true if the vector is close to zero in all dimensions
+        val s = 1e-8
+        return (abs(x) < s) && (abs(y) < s) && (abs(z) < s)
+    }
     fun toColor() = Color(x, y, z)
 
     companion object {
@@ -57,6 +63,8 @@ class Vec3(var x: Double, var y: Double, var z: Double) {
                 onUnitSphere
             else -onUnitSphere
         }
+        fun reflect(v: Vec3, n: Vec3) = v - 2 * dot(v, n) * n
+        operator fun Color.times(c: Color) = (this.toVec3() * c.toVec3()).toColor()
         operator fun Double.times(v: Vec3) = v * this
         operator fun Double.times(c: Color) = (c.toVec3() * this).toColor()
     }
