@@ -1,3 +1,5 @@
+import kotlin.math.sqrt
+
 class Color(var r: Double, var g: Double, var b: Double) {
     constructor(r: Int, g: Int, b: Int) : this(r.toDouble(), g.toDouble(), b.toDouble())
     operator fun unaryMinus() = Color(-r, -g, -b)
@@ -5,6 +7,8 @@ class Color(var r: Double, var g: Double, var b: Double) {
     operator fun minus(c: Color) = this + -c
     fun toVec3() = Vec3(r, g, b)
     companion object {
+        fun linearToGamma(linearComponent: Double) = sqrt(linearComponent)
+
         fun writeColor(pixelColor: Color, samplesPerPixel: Int) {
             var r = pixelColor.r
             var g = pixelColor.g
@@ -15,6 +19,11 @@ class Color(var r: Double, var g: Double, var b: Double) {
             r *= scale
             g *= scale
             b *= scale
+
+            // Apply the linear to gamma transform
+            r = linearToGamma(r)
+            g = linearToGamma(g)
+            b = linearToGamma(b)
 
             //Write the translated [0,255] value of each color component.
             val intensity = Interval(0.000, 0.999)

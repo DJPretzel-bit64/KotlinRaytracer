@@ -1,3 +1,6 @@
+import Vec3.Companion.randomInUnitSphere
+import Vec3.Companion.randomOnHemisphere
+import Vec3.Companion.randomUnitVector
 import Vec3.Companion.times
 import Vec3.Companion.unitVector
 import java.awt.image.BufferedImage
@@ -9,6 +12,7 @@ class Camera {
     var aspectRatio = 1.0
     var imageWidth = 100
     var samplesPerPixel = 10
+    var maxDepth = 10
     private var imageHeight = 100
     private var center = Vec3()
     private var pixel00Loc = Vec3()
@@ -34,7 +38,7 @@ class Camera {
                 var pixelColor = Color(0, 0, 0)
                 for(sample in 0..<samplesPerPixel) {
                     val r = getRay(i, j)
-                    pixelColor += rayColor(r, world)
+                    pixelColor += rayColor(r, maxDepth, world)
                 }
                 Color.writeColor(pixelColor, samplesPerPixel)
                 image?.setRGB(i, j, Color.intRGB((pixelColor.toVec3() / samplesPerPixel.toDouble()).toColor()))
@@ -89,11 +93,17 @@ class Camera {
         return (px * pixelDeltaU) + (py * pixelDeltaV)
     }
 
-    private fun rayColor(r: Ray, world: Hittable): Color {
+    private fun rayColor(r: Ray, depth: Int, world: Hittable): Color {
         val rec = HitRecord()
 
-        if(world.hit(r, Interval(0.0, Double.POSITIVE_INFINITY), rec))
-            return (0.5 * (rec.normal + Color(1, 1, 1).toVec3())).toColor()
+        // If we've exceeded the ray bounce limit, no more light is gathered.
+        if(depth <= 0)
+            return Color(0, 0, 0)
+
+        if(world.hit(r, Interval(0.001, Double.POSITIVE_INFINITY), rec)) {
+            val direction = rec.normal + randomUnitVector()
+            return 0.5 * rayColor(Ray(rec.p, direction), depth - 1, world)
+        }
 
         val unitDirection = unitVector(r.direction)
         val a = 0.5 * (unitDirection.y + 1.0)
