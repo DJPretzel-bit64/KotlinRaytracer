@@ -1,13 +1,13 @@
 fun main() {
-    val imageWidth = 256
-    val imageHeight = 256
+    val world = HittableList()
+    world.add(Sphere(Vec3(0, 0, -1), 0.5))
+    world.add(Sphere(Vec3(0.0, -100.5, -1.0), 100.0))
 
-    print("P3\n$imageWidth $imageHeight\n255\n")
+    val cam = Camera()
 
-    for(j in 0..<imageHeight) {
-        for(i in 0..<imageWidth) {
-            val pixelColor = Color(i / (imageWidth -1).toDouble(), j / (imageHeight - 1).toDouble(), 0.0)
-            Color.writeColor(pixelColor)
-        }
-    }
+    cam.aspectRatio = 16.0 / 9.0
+    cam.imageWidth = 400
+    cam.samplesPerPixel = 100
+
+    cam.render(world)
 }
