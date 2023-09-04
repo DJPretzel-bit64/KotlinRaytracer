@@ -1,5 +1,4 @@
 import Vec3.Companion.dot
-import Vec3.Companion.randomDouble
 import Vec3.Companion.randomUnitVector
 import Vec3.Companion.reflect
 import Vec3.Companion.refract

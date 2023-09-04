@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage
 import kotlin.math.sqrt
 
 class Color(var r: Double, var g: Double, var b: Double) {
@@ -11,9 +12,9 @@ class Color(var r: Double, var g: Double, var b: Double) {
         return "$r, $g, $b"
     }
     companion object {
-        fun linearToGamma(linearComponent: Double) = sqrt(linearComponent)
+        private fun linearToGamma(linearComponent: Double) = sqrt(linearComponent)
 
-        fun writeColor(pixelColor: Color, samplesPerPixel: Int) {
+        fun writeColor(pixelColor: Color, samplesPerPixel: Int, render: BufferedImage?, i: Int, j: Int) {
             var r = pixelColor.r
             var g = pixelColor.g
             var b = pixelColor.b
@@ -31,17 +32,19 @@ class Color(var r: Double, var g: Double, var b: Double) {
 
             //Write the translated [0,255] value of each color component.
             val intensity = Interval(0.000, 0.999)
-            println(
-                "${(256 * intensity.clamp(r)).toInt()} " +
-                "${(256 * intensity.clamp(g)).toInt()} " +
-                "${(256 * intensity.clamp(b)).toInt()}"
-            )
-        }
-        fun intRGB(color: Color): Int {
-            val r = (color.r * 255.999).toInt()
-            val g = (color.g * 255.999).toInt()
-            val b = (color.b * 255.999).toInt()
-            return r.shl(16) + g.shl(8) + b
+            val ri = (256 * intensity.clamp(r)).toInt()
+            val gi = (256 * intensity.clamp(g)).toInt()
+            val bi = (256 * intensity.clamp(b)).toInt()
+
+            /*println(
+                "$ri " +
+                "$gi " +
+                "$bi"
+            )*/
+
+            val rgb = ri.shl(16) + gi.shl(8) + bi
+
+            render?.setRGB(i, j, rgb)
         }
     }
 }

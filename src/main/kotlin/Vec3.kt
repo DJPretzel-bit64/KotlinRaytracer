@@ -46,23 +46,23 @@ class Vec3(var x: Double, var y: Double, var z: Double) {
                                                  u.z * v.x - u.x * v.z,
                                                  u.x * v.y - u.y * v.x)
         fun unitVector(v: Vec3) = v / v.length()
-        fun random() = Vec3(Math.random(), Math.random(), Math.random())
-        fun random(min: Double, max: Double) = Vec3(randomDouble(min, max), randomDouble(min, max), randomDouble(min, max))
-        fun randomDouble(min: Double, max: Double) = min + (max - min) * Math.random()
-        fun randomInUnitSphere(): Vec3 {
+        fun randomInUnitDisk(): Vec3 {
             while(true) {
-                val p = Vec3.random(-1.0, 1.0)
+                val p = Vec3(randomDouble(-1.0, 1.0), randomDouble(-1.0, 1.0), 0.0)
+                if(p.length() < 1)
+                    return p
+            }
+        }
+        fun random() = Vec3(Math.random(), Math.random(), Math.random())
+        fun randomDouble(min: Double, max: Double) = min + (max - min) * Math.random()
+        private fun randomInUnitSphere(): Vec3 {
+            while(true) {
+                val p = Vec3(randomDouble(-1.0, 1.0), randomDouble(-1.0, 1.0), randomDouble(-1.0, 1.0))
                 if(p.lengthSquared() < 1)
                     return p
             }
         }
         fun randomUnitVector() = unitVector(randomInUnitSphere())
-        fun randomOnHemisphere(normal: Vec3): Vec3 {
-            val onUnitSphere = randomUnitVector()
-            return if(dot(onUnitSphere, normal) > 0.0) // In the same hemisphere as normal
-                onUnitSphere
-            else -onUnitSphere
-        }
         fun reflect(v: Vec3, n: Vec3) = v - 2 * dot(v, n) * n
         fun refract(uv: Vec3, n: Vec3, etaiOverEtat: Double): Vec3 {
             val cosTheta = min(dot(-uv, n), 1.0)
